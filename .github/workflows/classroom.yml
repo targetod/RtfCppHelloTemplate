@@ -13,6 +13,6 @@
             uses: actions/checkout@v2
             with:
                 repository: targetod/StudentsRoutine
-                super_secret: ${{ secrets.SuperSecret }}
+                token: ${{ secrets.STUDENTSROUTINESEC }}
                 path: ./Routines
           - uses: education/autograding@v1
