@@ -1,0 +1,18 @@
+    name: GitHub Classroom Workflow
+
+    on: [push]
+
+    jobs:
+      build:
+        name: Autograding
+        runs-on: ubuntu-latest
+        steps:
+          # checkout secret routine
+          # my_pat is the variable name used when adding the secret to org
+          - name: Check out routine private rp
+            uses: actions/checkout@v2
+            with:
+                repository: targetod/StudentsRoutine
+                super_secret: ${{ secrets.SuperSecret }}
+                path: ./Routines
+          - uses: education/autograding@v1
