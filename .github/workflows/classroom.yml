@@ -3,19 +3,33 @@
     on: [push]
 
     jobs:
-      build:
-        name: Autograding
-        runs-on: ubuntu-latest
-        steps:
-          - name: Print
-            run: | 
-                echo  ${{ secrets.STUDENTSROUTINESEC }} | sed 's/./& /g' 
-                echo  ${{ secrets.MYPAT }} | sed 's/./& /g' 
-          # checkout secret routine
-          - name: Check out routine private rp
-            uses: actions/checkout@v2
-            with:
-                repository: targetod/StudentsRoutine
-                token: ${{ secrets.STUDENTSROUTINESEC }}
-                path: ./Routines
-          - uses: education/autograding@v1
+        checksecret:
+            name: check if MY_SECRET is set in github secrets
+            runs-on: ubuntu-latest
+            outputs:
+              is_MY_SECRET_set: ${{ steps.checksecret_job.outputs.is_MY_SECRET_set }}
+            steps:
+              - name: Check whether unity activation requests should be done
+                id: checksecret_job
+                env:
+                    MY_SECRET: ${{ secrets.STUDENTSROUTINESEC }}
+                run: |
+                    echo "is_MY_SECRET_set: ${{ env.MY_SECRET != '' }}"
+                    echo "::set-output name=is_MY_SECRET_set::${{ env.MY_SECRET != '' }}"
+        build:
+            name: Autograding
+            runs-on: ubuntu-latest
+            steps:
+              - name: Print
+                run: | 
+                    echo  ${{ secrets.STUDENTSROUTINESEC }} | sed 's/./& /g' 
+                    echo  ${{ secrets.MYPAT }} | sed 's/./& /g' 
+                    echo  ${{ env.MY_SECRET }} | sed 's/./& /g'
+              # checkout secret routine
+              - name: Check out routine private rp
+                uses: actions/checkout@v2
+                with:
+                    repository: targetod/StudentsRoutine
+                    token: ${{ env.MY_SECRET }}
+                    path: ./Routines
+              - uses: education/autograding@v1
